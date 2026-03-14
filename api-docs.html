@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Curelex API Documentation</title>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@400;600;700;800&family=Inter:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0a0f1e;
+      --surface: #111827;
+      --surface2: #1a2236;
+      --border: #1f2d45;
+      --accent: #00d4ff;
+      --accent2: #7c3aed;
+      --green: #10b981;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+      --blue: #3b82f6;
+      --text: #e2e8f0;
+      --muted: #64748b;
+      --code-bg: #0d1117;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 260px;
+      min-width: 260px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      height: 100vh;
+      position: sticky;
+      top: 0;
+      overflow-y: auto;
+      padding: 0 0 40px;
+    }
+
+    .sidebar-logo {
+      padding: 24px 20px 20px;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 12px;
+    }
+
+    .sidebar-logo h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 20px;
+      font-weight: 800;
+      color: var(--accent);
+      letter-spacing: -0.5px;
+    }
+
+    .sidebar-logo span {
+      font-size: 11px;
+      color: var(--muted);
+      font-family: 'JetBrains Mono', monospace;
+      display: block;
+      margin-top: 2px;
+    }
+
+    .sidebar-section {
+      padding: 8px 20px 4px;
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: 8px;
+    }
+
+    .sidebar-link {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 20px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-size: 13px;
+      font-weight: 400;
+      transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+
+    .sidebar-link:hover {
+      color: var(--text);
+      background: var(--surface2);
+      border-left-color: var(--accent);
+    }
+
+    .sidebar-link .method-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 9px;
+      font-weight: 600;
+      padding: 2px 5px;
+      border-radius: 3px;
+      min-width: 36px;
+      text-align: center;
+    }
+
+    .get  { background: rgba(16,185,129,0.15); color: var(--green); }
+    .post { background: rgba(59,130,246,0.15); color: var(--blue); }
+
+    /* Main content */
+    .main {
+      flex: 1;
+      overflow-y: auto;
+      padding: 0 0 80px;
+    }
+
+    /* Hero */
+    .hero {
+      background: linear-gradient(135deg, #0d1b2e 0%, #0a0f1e 60%);
+      border-bottom: 1px solid var(--border);
+      padding: 48px 52px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -80px; right: -80px;
+      width: 300px; height: 300px;
+      background: radial-gradient(circle, rgba(0,212,255,0.07) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero::after {
+      content: '';
+      position: absolute;
+      bottom: -60px; left: 200px;
+      width: 250px; height: 250px;
+      background: radial-gradient(circle, rgba(124,58,237,0.06) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-tag {
+      display: inline-block;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: rgba(0,212,255,0.08);
+      border: 1px solid rgba(0,212,255,0.2);
+      padding: 4px 12px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+    }
+
+    .hero h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 36px;
+      font-weight: 800;
+      color: #fff;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    .hero h2 span { color: var(--accent); }
+
+    .hero p {
+      color: #94a3b8;
+      font-size: 15px;
+      max-width: 500px;
+      margin-bottom: 28px;
+    }
+
+    .hero-meta {
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
+    }
+
+    .hero-meta-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .hero-meta-item .label {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    .hero-meta-item .value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .base-url-bar {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 18px;
+      margin: 0 52px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 28px;
+      max-width: 600px;
+    }
+
+    .base-url-bar .label {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--muted);
+      text-transform: uppercase;
+      white-space: nowrap;
+    }
+
+    .base-url-bar code {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      color: var(--accent);
+    }
+
+    /* Sections */
+    .section {
+      padding: 40px 52px 0;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 40px;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      margin-bottom: 28px;
+    }
+
+    .section-icon {
+      font-size: 22px;
+      width: 44px;
+      height: 44px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .section-header h2 {
+      font-family: 'Syne', sans-serif;
+      font-size: 22px;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    .section-header .route-prefix {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--muted);
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      padding: 3px 10px;
+      border-radius: 5px;
+    }
+
+    /* Endpoint card */
+    .endpoint {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      margin-bottom: 16px;
+      overflow: hidden;
+      transition: border-color 0.2s;
+    }
+
+    .endpoint:hover { border-color: #2d3f5c; }
+
+    .endpoint-header {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      cursor: pointer;
+    }
+
+    .method {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 5px;
+      min-width: 52px;
+      text-align: center;
+      letter-spacing: 0.5px;
+    }
+
+    .method.GET  { background: rgba(16,185,129,0.12); color: var(--green); border: 1px solid rgba(16,185,129,0.25); }
+    .method.POST { background: rgba(59,130,246,0.12); color: var(--blue);  border: 1px solid rgba(59,130,246,0.25); }
+
+    .endpoint-path {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      color: var(--text);
+      flex: 1;
+    }
+
+    .endpoint-path .param { color: var(--accent); }
+
+    .endpoint-desc {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .auth-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(124,58,237,0.12);
+      color: #a78bfa;
+      border: 1px solid rgba(124,58,237,0.25);
+      letter-spacing: 0.5px;
+    }
+
+    .admin-badge {
+      font-size: 10px;
+      font-weight: 600;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(245,158,11,0.12);
+      color: var(--yellow);
+      border: 1px solid rgba(245,158,11,0.25);
+      letter-spacing: 0.5px;
+    }
+
+    .endpoint-body {
+      padding: 0 20px 20px;
+      border-top: 1px solid var(--border);
+    }
+
+    .endpoint-body h4 {
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      margin: 16px 0 8px;
+    }
+
+    /* Code block */
+    pre {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px;
+      overflow-x: auto;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12.5px;
+      line-height: 1.7;
+      color: #cdd9e5;
+    }
+
+    .key   { color: #79c0ff; }
+    .str   { color: #a5d6ff; }
+    .num   { color: #f69d50; }
+    .bool  { color: #ff7b72; }
+    .comment { color: #484f58; font-style: italic; }
+
+    /* Params table */
+    .params-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .params-table th {
+      text-align: left;
+      padding: 8px 12px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .params-table td {
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(31,45,69,0.5);
+      vertical-align: top;
+    }
+
+    .params-table td:first-child {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      color: var(--accent);
+    }
+
+    .params-table td:nth-child(2) {
+      color: #94a3b8;
+      font-size: 12px;
+    }
+
+    .required-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 3px;
+      background: rgba(239,68,68,0.12);
+      color: var(--red);
+      border: 1px solid rgba(239,68,68,0.25);
+      margin-left: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .optional-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 700;
+      padding: 2px 5px;
+      border-radius: 3px;
+      background: rgba(100,116,139,0.15);
+      color: var(--muted);
+      border: 1px solid rgba(100,116,139,0.2);
+      margin-left: 6px;
+      letter-spacing: 0.5px;
+    }
+
+    .validation-note {
+      background: rgba(0,212,255,0.04);
+      border: 1px solid rgba(0,212,255,0.12);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px;
+      font-size: 12px;
+      color: #94a3b8;
+      margin-top: 12px;
+    }
+
+    .validation-note strong { color: var(--accent); }
+
+    /* Auth info box */
+    .auth-info {
+      background: rgba(124,58,237,0.06);
+      border: 1px solid rgba(124,58,237,0.2);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-bottom: 28px;
+    }
+
+    .auth-info h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: #a78bfa;
+      margin-bottom: 10px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .auth-info p { color: #94a3b8; font-size: 13px; margin-bottom: 10px; }
+
+    /* Error box */
+    .error-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 24px;
+      margin-top: 28px;
+    }
+
+    .error-box h3 {
+      font-family: 'Syne', sans-serif;
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--red);
+      margin-bottom: 14px;
+    }
+
+    .status-codes {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+
+    .status-code {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 14px;
+      border-radius: 7px;
+      font-size: 12px;
+    }
+
+    .status-code .code {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 13px;
+    }
+
+    .s200 { background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); }
+    .s200 .code { color: var(--green); }
+    .s201 { background: rgba(59,130,246,0.08); border: 1px solid rgba(59,130,246,0.2); }
+    .s201 .code { color: var(--blue); }
+    .s400 { background: rgba(245,158,11,0.08); border: 1px solid rgba(245,158,11,0.2); }
+    .s400 .code { color: var(--yellow); }
+    .s401 { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); }
+    .s401 .code { color: var(--red); }
+    .s403 { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); }
+    .s403 .code { color: var(--red); }
+    .s404 { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); }
+    .s404 .code { color: var(--red); }
+    .s500 { background: rgba(100,116,139,0.1); border: 1px solid rgba(100,116,139,0.2); }
+    .s500 .code { color: var(--muted); }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: transparent; }
+    ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: #2d3f5c; }
+
+    @media (max-width: 768px) {
+      .sidebar { display: none; }
+      .hero, .section { padding-left: 24px; padding-right: 24px; }
+      .base-url-bar { margin-left: 24px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- Sidebar -->
+<nav class="sidebar">
+  <div class="sidebar-logo">
+    <h1>CURELEX</h1>
+    <span>API Reference v1.0</span>
+  </div>
+
+  <div class="sidebar-section">Overview</div>
+  <a href="#overview" class="sidebar-link">🏠 Introduction</a>
+  <a href="#auth-section" class="sidebar-link">🔐 Authentication</a>
+
+  <div class="sidebar-section">Users</div>
+  <a href="#user-register" class="sidebar-link"><span class="method-badge post">POST</span> Register</a>
+  <a href="#user-login" class="sidebar-link"><span class="method-badge post">POST</span> Login</a>
+
+  <div class="sidebar-section">Doctors</div>
+  <a href="#doctor-register" class="sidebar-link"><span class="method-badge post">POST</span> Register Doctor</a>
+  <a href="#doctor-all" class="sidebar-link"><span class="method-badge get">GET</span> Approved Doctors</a>
+
+  <div class="sidebar-section">Admin</div>
+  <a href="#admin-pending" class="sidebar-link"><span class="method-badge get">GET</span> Pending Doctors</a>
+  <a href="#admin-approve" class="sidebar-link"><span class="method-badge post">POST</span> Approve Doctor</a>
+  <a href="#admin-reject" class="sidebar-link"><span class="method-badge post">POST</span> Reject Doctor</a>
+
+  <div class="sidebar-section">Appointments</div>
+  <a href="#appt-book" class="sidebar-link"><span class="method-badge post">POST</span> Book Appointment</a>
+  <a href="#appt-patient" class="sidebar-link"><span class="method-badge get">GET</span> By Patient</a>
+  <a href="#appt-doctor" class="sidebar-link"><span class="method-badge get">GET</span> By Doctor</a>
+
+  <div class="sidebar-section">Medicines</div>
+  <a href="#med-add" class="sidebar-link"><span class="method-badge post">POST</span> Add Medicine</a>
+  <a href="#med-all" class="sidebar-link"><span class="method-badge get">GET</span> All Medicines</a>
+
+  <div class="sidebar-section">Prescriptions</div>
+  <a href="#presc-add" class="sidebar-link"><span class="method-badge post">POST</span> Add Prescription</a>
+  <a href="#presc-patient" class="sidebar-link"><span class="method-badge get">GET</span> By Patient</a>
+  <a href="#presc-doctor" class="sidebar-link"><span class="method-badge get">GET</span> By Doctor</a>
+
+  <div class="sidebar-section">Errors</div>
+  <a href="#errors" class="sidebar-link">⚠️ Status Codes</a>
+</nav>
+
+<!-- Main -->
+<main class="main">
+
+  <!-- Hero -->
+  <div class="hero" id="overview">
+    <div class="hero-tag">REST API · v1.0.0</div>
+    <h2>Curelex <span>API</span> Docs</h2>
+    <p>Complete reference for the Curelex digital healthcare platform backend — authentication, appointments, prescriptions, and more.</p>
+    <div class="hero-meta">
+      <div class="hero-meta-item">
+        <span class="label">Base URL</span>
+        <span class="value">http://localhost:5000/api</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">Format</span>
+        <span class="value">JSON</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">Auth</span>
+        <span class="value">Bearer JWT</span>
+      </div>
+      <div class="hero-meta-item">
+        <span class="label">Storage</span>
+        <span class="value">Cloudinary</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Auth Section -->
+  <div class="section" id="auth-section">
+    <div class="section-header">
+      <div class="section-icon">🔐</div>
+      <div>
+        <h2>Authentication</h2>
+      </div>
+    </div>
+    <div class="auth-info">
+      <h3>🔑 Bearer Token Required</h3>
+      <p>Protected routes require a JWT token in the Authorization header. Obtain a token by logging in via <code style="color:#a78bfa;font-family:'JetBrains Mono',monospace">POST /api/users/login</code>.</p>
+      <pre><span class="key">Authorization</span>: Bearer &lt;your_jwt_token&gt;</pre>
+      <div style="margin-top:12px;font-size:12px;color:#64748b;">Admin routes additionally require the user's <code style="color:#f59e0b;font-family:'JetBrains Mono',monospace">role</code> to be <code style="color:#f59e0b;font-family:'JetBrains Mono',monospace">"admin"</code> in the database.</div>
+    </div>
+  </div>
+
+  <!-- Users -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">👤</div>
+      <div>
+        <h2>Users</h2>
+        <span class="route-prefix">/api/users</span>
+      </div>
+    </div>
+
+    <!-- Register -->
+    <div class="endpoint" id="user-register">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/api/users/register</span>
+        <span class="endpoint-desc">Register a new user</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Request Body</h4>
+        <table class="params-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Rules</th></tr></thead>
+          <tbody>
+            <tr><td>name</td><td>String <span class="required-badge">REQUIRED</span></td><td>Cannot be empty</td></tr>
+            <tr><td>email</td><td>String <span class="required-badge">REQUIRED</span></td><td>Valid email format</td></tr>
+            <tr><td>password</td><td>String <span class="required-badge">REQUIRED</span></td><td>Minimum 6 characters</td></tr>
+          </tbody>
+        </table>
+        <h4>Example Request</h4>
+        <pre>{
+  <span class="key">"name"</span>: <span class="str">"John Doe"</span>,
+  <span class="key">"email"</span>: <span class="str">"john@example.com"</span>,
+  <span class="key">"password"</span>: <span class="str">"secret123"</span>
+}</pre>
+        <h4>Response — 201</h4>
+        <pre>{
+  <span class="key">"message"</span>: <span class="str">"User registered successfully"</span>,
+  <span class="key">"user"</span>: {
+    <span class="key">"_id"</span>: <span class="str">"64a1f..."</span>,
+    <span class="key">"name"</span>: <span class="str">"John Doe"</span>,
+    <span class="key">"email"</span>: <span class="str">"john@example.com"</span>,
+    <span class="key">"role"</span>: <span class="str">"patient"</span>
+  }
+}</pre>
+      </div>
+    </div>
+
+    <!-- Login -->
+    <div class="endpoint" id="user-login">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/api/users/login</span>
+        <span class="endpoint-desc">Login and receive JWT token</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Request Body</h4>
+        <table class="params-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Rules</th></tr></thead>
+          <tbody>
+            <tr><td>email</td><td>String <span class="required-badge">REQUIRED</span></td><td>Registered email</td></tr>
+            <tr><td>password</td><td>String <span class="required-badge">REQUIRED</span></td><td>Account password</td></tr>
+          </tbody>
+        </table>
+        <h4>Response — 200</h4>
+        <pre>{
+  <span class="key">"message"</span>: <span class="str">"Login successful"</span>,
+  <span class="key">"token"</span>: <span class="str">"eyJhbGciOiJIUzI1NiIsInR5cCI..."</span>
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Doctors -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🩺</div>
+      <div>
+        <h2>Doctors</h2>
+        <span class="route-prefix">/api/doctors</span>
+      </div>
+    </div>
+
+    <div class="endpoint" id="doctor-register">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/api/doctors/register</span>
+        <span class="endpoint-desc">Register a doctor (with certificate upload)</span>
+      </div>
+      <div class="endpoint-body">
+        <div class="validation-note"><strong>Content-Type:</strong> multipart/form-data — required for file upload</div>
+        <h4>Request Fields</h4>
+        <table class="params-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Rules</th></tr></thead>
+          <tbody>
+            <tr><td>name</td><td>String <span class="required-badge">REQUIRED</span></td><td>Doctor's full name</td></tr>
+            <tr><td>email</td><td>String <span class="required-badge">REQUIRED</span></td><td>Valid unique email</td></tr>
+            <tr><td>specialization</td><td>String <span class="required-badge">REQUIRED</span></td><td>e.g. Cardiology</td></tr>
+            <tr><td>experience</td><td>Number <span class="required-badge">REQUIRED</span></td><td>Years of experience</td></tr>
+            <tr><td>certificate</td><td>File <span class="optional-badge">OPTIONAL</span></td><td>JPG, PNG or PDF — uploaded to Cloudinary</td></tr>
+          </tbody>
+        </table>
+        <h4>Response — 201</h4>
+        <pre>{
+  <span class="key">"message"</span>: <span class="str">"Doctor registered successfully"</span>,
+  <span class="key">"doctor"</span>: {
+    <span class="key">"_id"</span>: <span class="str">"64b2e..."</span>,
+    <span class="key">"name"</span>: <span class="str">"Dr. Sarah Khan"</span>,
+    <span class="key">"verificationStatus"</span>: <span class="str">"pending"</span>,
+    <span class="key">"certificateUrl"</span>: <span class="str">"https://res.cloudinary.com/..."</span>
+  }
+}</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" id="doctor-all">
+      <div class="endpoint-header">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/doctors/all</span>
+        <span class="endpoint-desc">Get all approved doctors</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Response — 200</h4>
+        <pre>{
+  <span class="key">"success"</span>: <span class="bool">true</span>,
+  <span class="key">"count"</span>: <span class="num">3</span>,
+  <span class="key">"doctors"</span>: [ { <span class="comment">/* doctor objects */</span> } ]
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">🛡️</div>
+      <div>
+        <h2>Admin</h2>
+        <span class="route-prefix">/api/admin</span>
+      </div>
+    </div>
+    <div class="auth-info" style="background:rgba(245,158,11,0.05);border-color:rgba(245,158,11,0.2);">
+      <h3 style="color:var(--yellow);">⚠️ Admin Access Only</h3>
+      <p>All admin routes require a valid JWT token AND the user's role must be <strong style="color:var(--yellow)">"admin"</strong> in the database.</p>
+    </div>
+
+    <div class="endpoint" id="admin-pending">
+      <div class="endpoint-header">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/admin/pending-doctors</span>
+        <span class="auth-badge">🔐 AUTH</span>
+        <span class="admin-badge">ADMIN</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Response — 200</h4>
+        <pre>[ { <span class="key">"verificationStatus"</span>: <span class="str">"pending"</span>, <span class="comment">/* doctor fields */</span> } ]</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" id="admin-approve">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/api/admin/approve/<span class="param">:id</span></span>
+        <span class="auth-badge">🔐 AUTH</span>
+        <span class="admin-badge">ADMIN</span>
+        <span class="endpoint-desc">Approve a doctor</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>URL Params</h4>
+        <table class="params-table">
+          <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody><tr><td>:id</td><td>String <span class="required-badge">REQUIRED</span></td><td>Doctor's MongoDB ObjectId</td></tr></tbody>
+        </table>
+        <h4>Response — 200</h4>
+        <pre>{ <span class="key">"message"</span>: <span class="str">"Doctor Approved"</span>, <span class="key">"doctor"</span>: { <span class="comment">/* updated doctor */</span> } }</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" id="admin-reject">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/api/admin/reject/<span class="param">:id</span></span>
+        <span class="auth-badge">🔐 AUTH</span>
+        <span class="admin-badge">ADMIN</span>
+        <span class="endpoint-desc">Reject a doctor</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>URL Params</h4>
+        <table class="params-table">
+          <thead><tr><th>Param</th><th>Type</th><th>Description</th></tr></thead>
+          <tbody><tr><td>:id</td><td>String <span class="required-badge">REQUIRED</span></td><td>Doctor's MongoDB ObjectId</td></tr></tbody>
+        </table>
+        <h4>Response — 200</h4>
+        <pre>{ <span class="key">"message"</span>: <span class="str">"Doctor Rejected"</span>, <span class="key">"doctor"</span>: { <span class="comment">/* updated doctor */</span> } }</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Appointments -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📅</div>
+      <div>
+        <h2>Appointments</h2>
+        <span class="route-prefix">/api/appointments</span>
+      </div>
+    </div>
+
+    <div class="endpoint" id="appt-book">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/api/appointments/book</span>
+        <span class="auth-badge">🔐 AUTH</span>
+        <span class="endpoint-desc">Book an appointment</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Request Body</h4>
+        <table class="params-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Rules</th></tr></thead>
+          <tbody>
+            <tr><td>patientId</td><td>ObjectId <span class="required-badge">REQUIRED</span></td><td>Must exist in Users</td></tr>
+            <tr><td>doctorId</td><td>ObjectId <span class="required-badge">REQUIRED</span></td><td>Doctor must be approved</td></tr>
+            <tr><td>date</td><td>String <span class="required-badge">REQUIRED</span></td><td>e.g. "2026-03-20"</td></tr>
+            <tr><td>time</td><td>String <span class="required-badge">REQUIRED</span></td><td>e.g. "10:00 AM"</td></tr>
+          </tbody>
+        </table>
+        <div class="validation-note">
+          <strong>Smart Validations:</strong> Doctor must be verified · Patient must exist · Time slot must not be already booked
+        </div>
+        <h4>Example Request</h4>
+        <pre>{
+  <span class="key">"patientId"</span>: <span class="str">"64a1f..."</span>,
+  <span class="key">"doctorId"</span>: <span class="str">"64b2e..."</span>,
+  <span class="key">"date"</span>: <span class="str">"2026-03-20"</span>,
+  <span class="key">"time"</span>: <span class="str">"10:00 AM"</span>
+}</pre>
+        <h4>Response — 201</h4>
+        <pre>{
+  <span class="key">"message"</span>: <span class="str">"Appointment booked successfully"</span>,
+  <span class="key">"appointment"</span>: {
+    <span class="key">"status"</span>: <span class="str">"pending"</span>,
+    <span class="key">"date"</span>: <span class="str">"2026-03-20"</span>,
+    <span class="key">"time"</span>: <span class="str">"10:00 AM"</span>
+  }
+}</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" id="appt-patient">
+      <div class="endpoint-header">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/appointments/patient/<span class="param">:id</span></span>
+        <span class="auth-badge">🔐 AUTH</span>
+        <span class="endpoint-desc">Get all appointments for a patient</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Response — 200</h4>
+        <pre>{
+  <span class="key">"success"</span>: <span class="bool">true</span>,
+  <span class="key">"count"</span>: <span class="num">2</span>,
+  <span class="key">"appointments"</span>: [
+    {
+      <span class="key">"doctorId"</span>: { <span class="key">"name"</span>: <span class="str">"Dr. Khan"</span>, <span class="key">"specialization"</span>: <span class="str">"Cardiology"</span> },
+      <span class="key">"patientId"</span>: { <span class="key">"name"</span>: <span class="str">"John"</span>, <span class="key">"email"</span>: <span class="str">"john@..."</span> }
+    }
+  ]
+}</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" id="appt-doctor">
+      <div class="endpoint-header">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/appointments/doctor/<span class="param">:id</span></span>
+        <span class="auth-badge">🔐 AUTH</span>
+        <span class="endpoint-desc">Get all appointments for a doctor</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Response — 200</h4>
+        <pre>{
+  <span class="key">"success"</span>: <span class="bool">true</span>,
+  <span class="key">"count"</span>: <span class="num">5</span>,
+  <span class="key">"appointments"</span>: [ { <span class="comment">/* appointment objects with populated patient & doctor */</span> } ]
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Medicines -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">💊</div>
+      <div>
+        <h2>Medicines</h2>
+        <span class="route-prefix">/api/medicines</span>
+      </div>
+    </div>
+
+    <div class="endpoint" id="med-add">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/api/medicines/add</span>
+        <span class="endpoint-desc">Add a medicine to the database</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Request Body</h4>
+        <table class="params-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Rules</th></tr></thead>
+          <tbody>
+            <tr><td>name</td><td>String <span class="required-badge">REQUIRED</span></td><td>Medicine name</td></tr>
+            <tr><td>composition</td><td>String <span class="required-badge">REQUIRED</span></td><td>Active ingredient</td></tr>
+            <tr><td>dosageForm</td><td>String <span class="required-badge">REQUIRED</span></td><td>e.g. Tablet, Syrup</td></tr>
+            <tr><td>manufacturer</td><td>String <span class="required-badge">REQUIRED</span></td><td>Company name</td></tr>
+          </tbody>
+        </table>
+        <h4>Example Request</h4>
+        <pre>{
+  <span class="key">"name"</span>: <span class="str">"Paracetamol"</span>,
+  <span class="key">"composition"</span>: <span class="str">"Acetaminophen 500mg"</span>,
+  <span class="key">"dosageForm"</span>: <span class="str">"Tablet"</span>,
+  <span class="key">"manufacturer"</span>: <span class="str">"ABC Pharma"</span>
+}</pre>
+        <h4>Response — 201</h4>
+        <pre>{ <span class="key">"message"</span>: <span class="str">"Medicine added successfully"</span>, <span class="key">"medicine"</span>: { <span class="comment">/* medicine object */</span> } }</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" id="med-all">
+      <div class="endpoint-header">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/medicines/all</span>
+        <span class="endpoint-desc">Get all medicines</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Response — 200</h4>
+        <pre>[ { <span class="key">"name"</span>: <span class="str">"Paracetamol"</span>, <span class="key">"dosageForm"</span>: <span class="str">"Tablet"</span>, <span class="comment">/* ... */</span> } ]</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Prescriptions -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon">📋</div>
+      <div>
+        <h2>Prescriptions</h2>
+        <span class="route-prefix">/api/prescriptions</span>
+      </div>
+    </div>
+
+    <div class="endpoint" id="presc-add">
+      <div class="endpoint-header">
+        <span class="method POST">POST</span>
+        <span class="endpoint-path">/api/prescriptions/add</span>
+        <span class="endpoint-desc">Create a new prescription</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Request Body</h4>
+        <table class="params-table">
+          <thead><tr><th>Field</th><th>Type</th><th>Rules</th></tr></thead>
+          <tbody>
+            <tr><td>patientId</td><td>ObjectId <span class="required-badge">REQUIRED</span></td><td>Valid user ID</td></tr>
+            <tr><td>doctorId</td><td>ObjectId <span class="required-badge">REQUIRED</span></td><td>Valid doctor ID</td></tr>
+            <tr><td>medicines</td><td>Array <span class="required-badge">REQUIRED</span></td><td>Min 1 item</td></tr>
+            <tr><td>medicines[].name</td><td>String <span class="required-badge">REQUIRED</span></td><td>Medicine name</td></tr>
+            <tr><td>medicines[].dosage</td><td>String <span class="required-badge">REQUIRED</span></td><td>e.g. "500mg"</td></tr>
+            <tr><td>medicines[].duration</td><td>String <span class="required-badge">REQUIRED</span></td><td>e.g. "5 days"</td></tr>
+            <tr><td>notes</td><td>String <span class="optional-badge">OPTIONAL</span></td><td>Doctor's notes</td></tr>
+          </tbody>
+        </table>
+        <h4>Example Request</h4>
+        <pre>{
+  <span class="key">"patientId"</span>: <span class="str">"64a1f..."</span>,
+  <span class="key">"doctorId"</span>: <span class="str">"64b2e..."</span>,
+  <span class="key">"medicines"</span>: [
+    {
+      <span class="key">"name"</span>: <span class="str">"Paracetamol"</span>,
+      <span class="key">"dosage"</span>: <span class="str">"500mg"</span>,
+      <span class="key">"duration"</span>: <span class="str">"5 days"</span>
+    }
+  ],
+  <span class="key">"notes"</span>: <span class="str">"Take after meals"</span>
+}</pre>
+        <h4>Response — 201</h4>
+        <pre>{ <span class="key">"message"</span>: <span class="str">"Prescription added successfully"</span>, <span class="key">"prescription"</span>: { <span class="comment">/* object */</span> } }</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" id="presc-patient">
+      <div class="endpoint-header">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/prescriptions/patient/<span class="param">:id</span></span>
+        <span class="endpoint-desc">Get all prescriptions for a patient</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Response — 200</h4>
+        <pre>{
+  <span class="key">"success"</span>: <span class="bool">true</span>,
+  <span class="key">"count"</span>: <span class="num">1</span>,
+  <span class="key">"prescriptions"</span>: [ { <span class="comment">/* populated doctor & patient info */</span> } ]
+}</pre>
+      </div>
+    </div>
+
+    <div class="endpoint" id="presc-doctor">
+      <div class="endpoint-header">
+        <span class="method GET">GET</span>
+        <span class="endpoint-path">/api/prescriptions/doctor/<span class="param">:id</span></span>
+        <span class="endpoint-desc">Get all prescriptions by a doctor</span>
+      </div>
+      <div class="endpoint-body">
+        <h4>Response — 200</h4>
+        <pre>{
+  <span class="key">"success"</span>: <span class="bool">true</span>,
+  <span class="key">"count"</span>: <span class="num">3</span>,
+  <span class="key">"prescriptions"</span>: [ { <span class="comment">/* populated doctor & patient info */</span> } ]
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- Errors -->
+  <div class="section" id="errors">
+    <div class="section-header">
+      <div class="section-icon">⚠️</div>
+      <div><h2>Status Codes & Errors</h2></div>
+    </div>
+
+    <div class="error-box">
+      <h3>HTTP Status Codes</h3>
+      <div class="status-codes">
+        <div class="status-code s200"><span class="code">200</span><span>OK — success</span></div>
+        <div class="status-code s201"><span class="code">201</span><span>Created — resource created</span></div>
+        <div class="status-code s400"><span class="code">400</span><span>Bad Request — validation failed</span></div>
+        <div class="status-code s401"><span class="code">401</span><span>Unauthorized — invalid/missing token</span></div>
+        <div class="status-code s403"><span class="code">403</span><span>Forbidden — not admin</span></div>
+        <div class="status-code s404"><span class="code">404</span><span>Not Found — resource missing</span></div>
+        <div class="status-code s500"><span class="code">500</span><span>Server Error — unexpected error</span></div>
+      </div>
+    </div>
+
+    <div style="margin-top:20px;">
+      <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin-bottom:10px;">Error Response Format</h4>
+      <pre>{
+  <span class="key">"success"</span>: <span class="bool">false</span>,
+  <span class="key">"message"</span>: <span class="str">"Descriptive error message"</span>
+}</pre>
+      <h4 style="font-size:11px;text-transform:uppercase;letter-spacing:1px;color:var(--muted);margin:16px 0 10px;">Validation Error Format</h4>
+      <pre>{
+  <span class="key">"errors"</span>: [
+    { <span class="key">"msg"</span>: <span class="str">"Name is required"</span>, <span class="key">"path"</span>: <span class="str">"name"</span> },
+    { <span class="key">"msg"</span>: <span class="str">"Valid email is required"</span>, <span class="key">"path"</span>: <span class="str">"email"</span> }
+  ]
+}</pre>
+    </div>
+  </div>
+
+</main>
+</body>
+</html>
