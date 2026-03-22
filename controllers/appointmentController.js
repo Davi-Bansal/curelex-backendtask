@@ -12,73 +12,73 @@ exports.bookAppointment = async (req, res, next) => {
 
     const { patientId, doctorId, date, time } = req.body;
 
-    // Check if patient exists
-    const patient = await User.findById(patientId);
+    const patient = await User.findByPk(patientId);
     if (!patient) {
       return res.status(404).json({ message: "Patient not found" });
     }
 
-    // Check if doctor exists
-    const doctor = await Doctor.findById(doctorId);
+    const doctor = await Doctor.findByPk(doctorId);
     if (!doctor) {
       return res.status(404).json({ message: "Doctor not found" });
     }
 
-    // Check if doctor is approved
     if (doctor.verificationStatus !== "approved") {
       return res.status(400).json({ message: "Doctor is not verified yet" });
     }
 
-    // Check if slot already booked
-    const existingAppointment = await Appointment.findOne({ doctorId, date, time });
+    const existingAppointment = await Appointment.findOne({
+      where: { doctorId, date, time }
+    });
+
     if (existingAppointment) {
       return res.status(400).json({ message: "This time slot is already booked" });
     }
 
-    const appointment = new Appointment({ patientId, doctorId, date, time });
-    await appointment.save();
+    const appointment = await Appointment.create({
+      patientId,
+      doctorId,
+      date,
+      time
+    });
 
     res.status(201).json({
       message: "Appointment booked successfully",
       appointment
     });
-
   } catch (error) {
     next(error);
   }
 };
 
-// Get appointments for a patient
+// Patient appointments
 exports.getAppointmentsByPatient = async (req, res, next) => {
   try {
-    const appointments = await Appointment.find({ patientId: req.params.id })
-      .populate("doctorId", "name specialization experience")
-      .populate("patientId", "name email");
+    const appointments = await Appointment.findAll({
+      where: { patientId: req.params.id }
+    });
 
     res.json({
       success: true,
       count: appointments.length,
       appointments
     });
-
   } catch (error) {
     next(error);
   }
 };
 
-// Get appointments for a doctor
+// Doctor appointments
 exports.getAppointmentsByDoctor = async (req, res, next) => {
   try {
-    const appointments = await Appointment.find({ doctorId: req.params.id })
-      .populate("doctorId", "name specialization")
-      .populate("patientId", "name email");
+    const appointments = await Appointment.findAll({
+      where: { doctorId: req.params.id }
+    });
 
     res.json({
       success: true,
       count: appointments.length,
       appointments
     });
-
   } catch (error) {
     next(error);
   }

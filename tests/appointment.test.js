@@ -15,11 +15,11 @@ const createPatient = async () => {
     password: hashedPassword,
     role: "patient"
   });
-  const token = jwt.sign(
-    { id: user._id, role: user.role },
-    process.env.JWT_SECRET || "secretkey",
-    { expiresIn: "1d" }
-  );
+ const token = jwt.sign(
+  { id: user.id, role: user.role },
+  process.env.JWT_SECRET || "secretkey",
+  { expiresIn: "1d" }
+);
   return { user, token };
 };
 
@@ -58,8 +58,8 @@ describe("📅 Appointment Routes", () => {
         .post("/api/appointments/book")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          patientId: user._id,
-          doctorId: doctor._id,
+          patientId: user.id,
+          doctorId: doctor.id,
           date: "2026-04-01",
           time: "10:00 AM"
         });
@@ -90,8 +90,8 @@ describe("📅 Appointment Routes", () => {
         .post("/api/appointments/book")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          patientId: user._id,
-          doctorId: doctor._id,
+          patientId: user.id,
+          doctorId: doctor.id,
           date: "2026-04-01",
           time: "10:00 AM"
         });
@@ -109,8 +109,8 @@ describe("📅 Appointment Routes", () => {
         .post("/api/appointments/book")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          patientId: user._id,
-          doctorId: doctor._id,
+          patientId: user.id,
+          doctorId: doctor.id,
           date: "2026-04-01",
           time: "10:00 AM"
         });
@@ -120,8 +120,8 @@ describe("📅 Appointment Routes", () => {
         .post("/api/appointments/book")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          patientId: user._id,
-          doctorId: doctor._id,
+          patientId: user.id,
+          doctorId: doctor.id,
           date: "2026-04-01",
           time: "10:00 AM"
         });
@@ -155,14 +155,14 @@ describe("📅 Appointment Routes", () => {
         .post("/api/appointments/book")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          patientId: user._id,
-          doctorId: doctor._id,
+          patientId: user.id,
+          doctorId: doctor.id,
           date: "2026-04-01",
           time: "10:00 AM"
         });
 
       const res = await request(app)
-        .get(`/api/appointments/patient/${user._id}`)
+        .get(`/api/appointments/patient/${user.id}`)
         .set("Authorization", `Bearer ${token}`);
 
       expect(res.statusCode).toBe(200);
@@ -174,7 +174,7 @@ describe("📅 Appointment Routes", () => {
       const { user, token } = await createPatient();
 
       const res = await request(app)
-        .get(`/api/appointments/patient/${user._id}`)
+        .get(`/api/appointments/patient/${user.id}`)
         .set("Authorization", `Bearer ${token}`);
 
       expect(res.statusCode).toBe(200);
@@ -194,14 +194,14 @@ describe("📅 Appointment Routes", () => {
         .post("/api/appointments/book")
         .set("Authorization", `Bearer ${token}`)
         .send({
-          patientId: user._id,
-          doctorId: doctor._id,
+          patientId: user.id,
+          doctorId: doctor.id,
           date: "2026-04-01",
           time: "11:00 AM"
         });
 
       const res = await request(app)
-        .get(`/api/appointments/doctor/${doctor._id}`)
+        .get(`/api/appointments/doctor/${doctor.id}`)
         .set("Authorization", `Bearer ${token}`);
 
       expect(res.statusCode).toBe(200);

@@ -9,24 +9,28 @@ exports.registerDoctor = async (req, res, next) => {
     }
 
     const { name, email, specialization, experience } = req.body;
-
-    // req.file.path gives the Cloudinary URL when using multer-storage-cloudinary
     const certificate = req.file ? req.file.path : null;
 
-    const existingDoctor = await Doctor.findOne({ email });
+    // ✅ FIX: store result
+    const existingDoctor = await Doctor.findOne({
+      where: { email }
+    });
+
+    // ✅ FIX: correct message (must match test)
     if (existingDoctor) {
-      return res.status(400).json({ message: "Doctor with this email already exists" });
+      return res.status(400).json({
+        message: "Doctor with this email already exists"
+      });
     }
 
-    const doctor = new Doctor({
+    const doctor = await Doctor.create({
       name,
       email,
       specialization,
       experience,
-      certificateUrl: certificate
+      certificateUrl: certificate,
+      verificationStatus: "pending"
     });
-
-    await doctor.save();
 
     res.status(201).json({
       message: "Doctor registered successfully",
@@ -34,13 +38,23 @@ exports.registerDoctor = async (req, res, next) => {
     });
 
   } catch (error) {
+
+    // ✅ EXTRA SAFETY (handles DB unique constraint)
+    if (error.name === "SequelizeUniqueConstraintError") {
+      return res.status(400).json({
+        message: "Doctor with this email already exists"
+      });
+    }
+
     next(error);
   }
 };
 
 exports.getApprovedDoctors = async (req, res, next) => {
   try {
-    const doctors = await Doctor.find({ verificationStatus: "approved" });
+    const doctors = await Doctor.findAll({
+      where: { verificationStatus: "approved" }
+    });
 
     res.json({
       success: true,

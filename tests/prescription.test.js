@@ -39,8 +39,8 @@ describe("📋 Prescription Routes", () => {
       const res = await request(app)
         .post("/api/prescriptions/add")
         .send({
-          patientId: patient._id,
-          doctorId: doctor._id,
+          patientId: patient.id,
+          doctorId: doctor.id,
           medicines: [
             { name: "Paracetamol", dosage: "500mg", duration: "5 days" }
           ],
@@ -59,7 +59,7 @@ describe("📋 Prescription Routes", () => {
       const res = await request(app)
         .post("/api/prescriptions/add")
         .send({
-          doctorId: doctor._id,
+          doctorId: doctor.id,
           medicines: [{ name: "Paracetamol", dosage: "500mg", duration: "5 days" }]
         });
 
@@ -73,7 +73,7 @@ describe("📋 Prescription Routes", () => {
       const res = await request(app)
         .post("/api/prescriptions/add")
         .send({
-          patientId: patient._id,
+          patientId: patient.id,
           medicines: [{ name: "Paracetamol", dosage: "500mg", duration: "5 days" }]
         });
 
@@ -88,8 +88,8 @@ describe("📋 Prescription Routes", () => {
       const res = await request(app)
         .post("/api/prescriptions/add")
         .send({
-          patientId: patient._id,
-          doctorId: doctor._id,
+          patientId: patient.id,
+          doctorId: doctor.id,
           medicines: []
         });
 
@@ -104,8 +104,8 @@ describe("📋 Prescription Routes", () => {
       const res = await request(app)
         .post("/api/prescriptions/add")
         .send({
-          patientId: patient._id,
-          doctorId: doctor._id,
+          patientId: patient.id,
+          doctorId: doctor.id,
           medicines: [{ name: "", dosage: "500mg", duration: "5 days" }]
         });
 
@@ -120,8 +120,8 @@ describe("📋 Prescription Routes", () => {
       const res = await request(app)
         .post("/api/prescriptions/add")
         .send({
-          patientId: patient._id,
-          doctorId: doctor._id,
+          patientId: patient.id,
+          doctorId: doctor.id,
           medicines: [
             { name: "Paracetamol", dosage: "500mg", duration: "5 days" },
             { name: "Ibuprofen", dosage: "400mg", duration: "3 days" }
@@ -144,13 +144,13 @@ describe("📋 Prescription Routes", () => {
       await request(app)
         .post("/api/prescriptions/add")
         .send({
-          patientId: patient._id,
-          doctorId: doctor._id,
+          patientId: patient.id,
+          doctorId: doctor.id,
           medicines: [{ name: "Paracetamol", dosage: "500mg", duration: "5 days" }]
         });
 
       const res = await request(app)
-        .get(`/api/prescriptions/patient/${patient._id}`);
+        .get(`/api/prescriptions/patient/${patient.id}`);
 
       expect(res.statusCode).toBe(200);
       expect(res.body.success).toBe(true);
@@ -161,7 +161,7 @@ describe("📋 Prescription Routes", () => {
       const patient = await createPatient();
 
       const res = await request(app)
-        .get(`/api/prescriptions/patient/${patient._id}`);
+        .get(`/api/prescriptions/patient/${patient.id}`);
 
       expect(res.statusCode).toBe(200);
       expect(res.body.count).toBe(0);
@@ -179,13 +179,13 @@ describe("📋 Prescription Routes", () => {
       await request(app)
         .post("/api/prescriptions/add")
         .send({
-          patientId: patient._id,
-          doctorId: doctor._id,
+          patientId: patient.id,
+          doctorId: doctor.id,
           medicines: [{ name: "Paracetamol", dosage: "500mg", duration: "5 days" }]
         });
 
       const res = await request(app)
-        .get(`/api/prescriptions/doctor/${doctor._id}`);
+        .get(`/api/prescriptions/doctor/${doctor.id}`);
 
       expect(res.statusCode).toBe(200);
       expect(res.body.success).toBe(true);

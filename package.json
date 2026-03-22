@@ -1,21 +1,25 @@
 {
   "name": "curelex-backend",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Curelex healthcare backend using Node.js, Express, MySQL, Sequelize",
+  "main": "server.js",
   "scripts": {
     "start": "node server.js",
     "test": "jest --runInBand --forceExit",
     "test:verbose": "jest --runInBand --forceExit --verbose"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": ["node", "express", "mysql", "sequelize", "backend"],
+  "author": "Davi",
   "license": "ISC",
   "type": "commonjs",
   "jest": {
     "testEnvironment": "node",
-    "testMatch": ["**/tests/**/*.test.js"],
-    "setupFilesAfterEnv": ["<rootDir>/tests/setup.js"]
+    "testMatch": [
+      "**/tests/**/*.test.js"
+    ],
+    "setupFilesAfterEnv": [
+      "<rootDir>/tests/setup.js"
+    ]
   },
   "dependencies": {
     "bcryptjs": "^3.0.3",
@@ -25,9 +29,10 @@
     "express": "^5.2.1",
     "express-validator": "^7.3.1",
     "jsonwebtoken": "^9.0.3",
-    "mongoose": "^9.3.0",
     "multer": "^2.1.1",
-    "multer-storage-cloudinary": "^4.0.0"
+    "multer-storage-cloudinary": "^4.0.0",
+    "mysql2": "^3.20.0",
+    "sequelize": "^6.37.8"
   },
   "devDependencies": {
     "jest": "^30.3.0",

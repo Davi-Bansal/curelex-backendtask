@@ -1,25 +1,29 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/mysql");
 
-const prescriptionSchema = new mongoose.Schema({
+const Prescription = sequelize.define("Prescription", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
   patientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   doctorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Doctor",
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
-  medicines: [
-    {
-      name: String,
-      dosage: String,
-      duration: String
-    }
-  ],
-  notes: { type: String },
-  createdAt: { type: Date, default: Date.now }
+  medicines: {
+    type: DataTypes.JSON, // important change
+    allowNull: false
+  },
+  notes: {
+    type: DataTypes.STRING
+  }
+}, {
+  timestamps: true
 });
 
-module.exports = mongoose.model("Prescription", prescriptionSchema);
+module.exports = Prescription;

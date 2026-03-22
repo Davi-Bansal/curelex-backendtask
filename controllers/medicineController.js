@@ -10,14 +10,17 @@ exports.addMedicine = async (req, res, next) => {
 
     const { name, composition, dosageForm, manufacturer } = req.body;
 
-    const medicine = new Medicine({ name, composition, dosageForm, manufacturer });
-    await medicine.save();
+    const medicine = await Medicine.create({
+      name,
+      composition,
+      dosageForm,
+      manufacturer
+    });
 
     res.status(201).json({
       message: "Medicine added successfully",
       medicine
     });
-
   } catch (error) {
     next(error);
   }
@@ -25,7 +28,7 @@ exports.addMedicine = async (req, res, next) => {
 
 exports.getMedicines = async (req, res, next) => {
   try {
-    const medicines = await Medicine.find();
+    const medicines = await Medicine.findAll();
     res.json(medicines);
   } catch (error) {
     next(error);

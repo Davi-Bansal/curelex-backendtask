@@ -10,50 +10,49 @@ exports.addPrescription = async (req, res, next) => {
 
     const { patientId, doctorId, medicines, notes } = req.body;
 
-    const prescription = new Prescription({ patientId, doctorId, medicines, notes });
-    await prescription.save();
+    const prescription = await Prescription.create({
+      patientId,
+      doctorId,
+      medicines,
+      notes
+    });
 
     res.status(201).json({
       message: "Prescription added successfully",
       prescription
     });
-
   } catch (error) {
     next(error);
   }
 };
 
-// Get prescriptions for a patient
 exports.getPrescriptionsByPatient = async (req, res, next) => {
   try {
-    const prescriptions = await Prescription.find({ patientId: req.params.id })
-      .populate("doctorId", "name specialization")
-      .populate("patientId", "name email");
+    const prescriptions = await Prescription.findAll({
+      where: { patientId: req.params.id }
+    });
 
     res.json({
       success: true,
       count: prescriptions.length,
       prescriptions
     });
-
   } catch (error) {
     next(error);
   }
 };
 
-// Get prescriptions by doctor
 exports.getPrescriptionsByDoctor = async (req, res, next) => {
   try {
-    const prescriptions = await Prescription.find({ doctorId: req.params.id })
-      .populate("doctorId", "name specialization")
-      .populate("patientId", "name email");
+    const prescriptions = await Prescription.findAll({
+      where: { doctorId: req.params.id }
+    });
 
     res.json({
       success: true,
       count: prescriptions.length,
       prescriptions
     });
-
   } catch (error) {
     next(error);
   }

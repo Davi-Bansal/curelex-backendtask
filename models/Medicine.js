@@ -1,11 +1,27 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/mysql");
 
-const medicineSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  composition: { type: String },
-  dosageForm: { type: String },
-  manufacturer: { type: String },
-  createdAt: { type: Date, default: Date.now }
+const Medicine = sequelize.define("Medicine", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
+  name: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+  composition: {
+    type: DataTypes.STRING
+  },
+  dosageForm: {
+    type: DataTypes.STRING
+  },
+  manufacturer: {
+    type: DataTypes.STRING
+  }
+}, {
+  timestamps: true
 });
 
-module.exports = mongoose.model("Medicine", medicineSchema);
+module.exports = Medicine;

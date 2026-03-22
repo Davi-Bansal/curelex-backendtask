@@ -1,33 +1,34 @@
-const mongoose = require("mongoose");
+const { DataTypes } = require("sequelize");
+const sequelize = require("../config/mysql");
 
-const appointmentSchema = new mongoose.Schema({
+const Appointment = sequelize.define("Appointment", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true
+  },
   patientId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "User",
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   doctorId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Doctor",
-    required: true
+    type: DataTypes.INTEGER,
+    allowNull: false
   },
   date: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   time: {
-    type: String,
-    required: true
+    type: DataTypes.STRING,
+    allowNull: false
   },
   status: {
-    type: String,
-    enum: ["pending", "confirmed", "completed"],
-    default: "pending"
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now
+    type: DataTypes.ENUM("pending", "confirmed", "completed"),
+    defaultValue: "pending"
   }
+}, {
+  timestamps: true
 });
 
-module.exports = mongoose.model("Appointment", appointmentSchema);
+module.exports = Appointment;

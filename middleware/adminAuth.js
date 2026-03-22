@@ -1,16 +1,18 @@
-const adminAuth = (req, res, next) => {
+const User = require("../models/User");
+
+const adminAuth = async (req, res, next) => {
   try {
-    // req.user is set by auth middleware before this runs
-    if (!req.user || req.user.role !== "admin") {
+    const user = await User.findByPk(req.user.id);
+
+    if (!user || user.role !== "admin") {
       return res.status(403).json({
         message: "Access denied. Admin only."
       });
     }
 
     next();
-
   } catch (error) {
-    next(error);
+    res.status(500).json({ error: error.message });
   }
 };
 
