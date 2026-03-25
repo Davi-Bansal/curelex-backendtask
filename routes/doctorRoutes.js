@@ -3,7 +3,11 @@ const router = express.Router();
 const { body } = require("express-validator");
 
 const upload = require("../middleware/upload");
-const { registerDoctor, getApprovedDoctors } = require("../controllers/doctorController");
+const {
+  registerDoctor,
+  getApprovedDoctors,
+  getDoctorById
+} = require("../controllers/doctorController");
 
 router.post(
   "/register",
@@ -18,5 +22,5 @@ router.post(
 );
 
 router.get("/all", getApprovedDoctors);
-
+router.get("/:id", getDoctorById);
 module.exports = router;

@@ -1,8 +1,10 @@
 const Doctor = require("../models/Doctor");
 const { validationResult } = require("express-validator");
 
+// ================= REGISTER DOCTOR =================
 exports.registerDoctor = async (req, res, next) => {
   try {
+    // 1. Validation
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ errors: errors.array() });
@@ -11,18 +13,18 @@ exports.registerDoctor = async (req, res, next) => {
     const { name, email, specialization, experience } = req.body;
     const certificate = req.file ? req.file.path : null;
 
-    // ✅ FIX: store result
+    // 2. Check existing doctor
     const existingDoctor = await Doctor.findOne({
       where: { email }
     });
 
-    // ✅ FIX: correct message (must match test)
     if (existingDoctor) {
       return res.status(400).json({
         message: "Doctor with this email already exists"
       });
     }
 
+    // 3. Create doctor
     const doctor = await Doctor.create({
       name,
       email,
@@ -32,14 +34,14 @@ exports.registerDoctor = async (req, res, next) => {
       verificationStatus: "pending"
     });
 
+    // 4. Response
     res.status(201).json({
       message: "Doctor registered successfully",
       doctor
     });
 
   } catch (error) {
-
-    // ✅ EXTRA SAFETY (handles DB unique constraint)
+    // Handle unique constraint (extra safety)
     if (error.name === "SequelizeUniqueConstraintError") {
       return res.status(400).json({
         message: "Doctor with this email already exists"
@@ -50,6 +52,28 @@ exports.registerDoctor = async (req, res, next) => {
   }
 };
 
+
+// ================= GET DOCTOR BY ID =================
+exports.getDoctorById = async (req, res, next) => {
+  try {
+    const doctor = await Doctor.findByPk(req.params.id);
+
+    if (!doctor) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    res.json({
+      success: true,
+      doctor
+    });
+
+  } catch (error) {
+    next(error);
+  }
+};
+
+
+// ================= GET APPROVED DOCTORS =================
 exports.getApprovedDoctors = async (req, res, next) => {
   try {
     const doctors = await Doctor.findAll({

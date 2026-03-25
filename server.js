@@ -14,6 +14,8 @@ const adminRoutes = require("./routes/adminRoutes");
 const appointmentRoutes = require("./routes/appointmentRoutes");
 const prescriptionRoutes = require("./routes/prescriptionRoutes");
 const medicineRoutes = require("./routes/medicineRoutes");
+const dashboardRoutes = require("./routes/dashboardRoutes");
+
 
 // Middleware
 const errorHandler = require("./middleware/errorHandler");
@@ -46,7 +48,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/appointments", appointmentRoutes);
 app.use("/api/prescriptions", prescriptionRoutes);
 app.use("/api/medicines", medicineRoutes);
-
+app.use("/api/dashboard", dashboardRoutes);
 // API Docs Route (optional)
 app.get("/docs", (req, res) => {
   res.sendFile(path.join(__dirname, "api-docs.html"));
